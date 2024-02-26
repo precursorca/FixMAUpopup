@@ -9,3 +9,9 @@ Place the plist into your munki repo's pkginfo folder and don't forget to run /u
 
 Read more about nopkg items at: https://github.com/munki/munki/wiki/nopkgs
 
+## Contributors
+* Alex Narvey
+
+—
+Alex Narvey
+precursor.ca
