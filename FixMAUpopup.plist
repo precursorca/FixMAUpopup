@@ -32,14 +32,10 @@ then
     echo "Microsoft AutoUpdate was found! Proceeding to removal process..."
     exit 0
 
-else
+fi
   
 echo "AutoUpdate silenced."
  
-exit 1
-
-fi
-
 exit 1
 </string>
 	<key>installer_type</key>
