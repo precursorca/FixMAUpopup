@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>OnDemand</key>
+	<true/>
+	<key>autoremove</key>
+	<false/>
+	<key>catalogs</key>
+	<array>
+		<string>production</string>
+		<string>testing</string>
+	</array>
+	<key>category</key>
+	<string>SelfService</string>
+	<key>developer</key>
+	<string>PrecursorSystems</string>
+	<key>display_name</key>
+	<string>Fix Microsoft AutoUpdate</string>
+	<key>icon_name</key>
+	<string></string>
+	<key>installcheck_script</key>
+	<string>#!/bin/bash
+ 
+# Check for Microsoft AutoUpdate
+
+echo "Searching Microsoft AutoUpdate..."
+ 
+if
+    [ -d /Library/Application\ Support/Microsoft/MAU2.0/Microsoft\ AutoUpdate.app ] 
+then
+    echo "Microsoft AutoUpdate was found! Proceeding to removal process..."
+    exit 0
+
+else
+  
+echo "AutoUpdate silenced."
+ 
+exit 1
+
+fi
+
+exit 1
+</string>
+	<key>installer_type</key>
+	<string>nopkg</string>
+	<key>minimum_os_version</key>
+	<string>11.0</string>
+	<key>name</key>
+	<string>Fix Microsoft AutoUpdate</string>
+	<key>postinstall_script</key>
+	<string>#!/bin/bash
+#Description: For those that provision Microsoft apps via munki this is an attempt to prevent Microsoft AutoUpdate from constantly showing in the Dock
+#FYI: The command to undo all this foo is left commented at the end of the script in case you want to revert.
+#Quit Microsoft AutoUpdate
+pkill -x "Microsoft AutoUpdate"
+#Get the current user
+current_user=$(stat -f "%Su" /dev/console)
+#unload the LaunchAgent
+launchctl bootout gui/$(id -u "$current_user") /Library/LaunchAgents/com.microsoft.update.agent.plist
+#unload the LaunchDaemon
+launchctl bootout system /Library/LaunchDaemons/com.microsoft.autoupdate.helper.plist
+#delete the app
+#rm -rf /Library/Application\ Support/Microsoft/MAU2.0
+#Prevent AutoUpdater to be re-installed
+# See https://apple.stackexchange.com/questions/428234/how-to-remove-microsoft-autoupdate-from-macos
+for F in /Library/{PrivilegedHelperTools,Launch{Agents,Daemons}}/com.microsoft.*update*.plist /Library/Application\ Support/Microsoft/MAU* ~/Library/Microsoft/*Updater; do echo 'Processing '"${F}"'..'; rm -rf "${F}" &amp;&amp; mkdir "${F}" &amp;&amp; chflags uchg "${F}"; done
+#The command to revert and allow AutoUpdate to be re-installed
+#for F in /Library/{PrivilegedHelperTools,Launch{Agents,Daemons}}/com.microsoft.*update*.plist /Library/Application\ Support/Microsoft/MAU* ~/Library/Microsoft/*Updater; do echo 'Processing '"${F}"'..'; sudo rm -rf "${F}"; done</string>
+	<key>unattended_install</key>
+	<true/>
+	<key>unattended_uninstall</key>
+	<true/>
+	<key>uninstallable</key>
+	<false/>
+	<key>version</key>
+	<string>1.0.0</string>
+</dict>
+</plist>
