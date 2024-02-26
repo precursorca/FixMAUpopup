@@ -5,4 +5,7 @@ The post install part of the script had to be added to each of the Micosoft 365 
 
 The fix itself was suggested at: https://apple.stackexchange.com/questions/428234/how-to-remove-microsoft-autoupdate-from-macos
 
+Place the plist into your munki repo's pkginfo folder and don't forget to run /usr/local/munki/makecatalogs
+
+Read more about nopkg items at: https://github.com/munki/munki/wiki/nopkgs
 
