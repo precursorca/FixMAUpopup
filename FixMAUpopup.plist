@@ -29,15 +29,10 @@ echo "Searching Microsoft AutoUpdate..."
 if
     [ -d /Library/Application\ Support/Microsoft/MAU2.0/Microsoft\ AutoUpdate.app ] 
 then
-    echo "Microsoft AutoUpdate was found! Proceeding to removal process..."
     exit 0
-
-fi
-  
-echo "AutoUpdate silenced."
- 
-exit 1
-</string>
+else 
+	exit 1
+fi</string>
 	<key>installer_type</key>
 	<string>nopkg</string>
 	<key>minimum_os_version</key>
