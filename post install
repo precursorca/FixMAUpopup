@@ -1,0 +1,19 @@
+	<key>postinstall_script</key>
+	<string>#!/bin/bash
+#Description: For those that provision Microsoft apps via munki this is an attempt to prevent Microsoft AutoUpdate from constantly showing in the Dock
+#FYI: The command to undo all this foo is left commented at the end of the script in case you want to revert.
+#Quit Microsoft AutoUpdate
+pkill -x "Microsoft AutoUpdate"
+#Get the current user
+current_user=$(stat -f "%Su" /dev/console)
+#unload the LaunchAgent
+launchctl bootout gui/$(id -u "$current_user") /Library/LaunchAgents/com.microsoft.update.agent.plist
+#unload the LaunchDaemon
+launchctl bootout system /Library/LaunchDaemons/com.microsoft.autoupdate.helper.plist
+#delete the app
+#rm -rf /Library/Application\ Support/Microsoft/MAU2.0
+#Prevent AutoUpdater to be re-installed
+# See https://apple.stackexchange.com/questions/428234/how-to-remove-microsoft-autoupdate-from-macos
+for F in /Library/{PrivilegedHelperTools,Launch{Agents,Daemons}}/com.microsoft.*update*.plist /Library/Application\ Support/Microsoft/MAU* ~/Library/Microsoft/*Updater; do echo 'Processing '"${F}"'..'; rm -rf "${F}" &amp;&amp; mkdir "${F}" &amp;&amp; chflags uchg "${F}"; done
+#The command to revert and allow AutoUpdate to be re-installed
+#for F in /Library/{PrivilegedHelperTools,Launch{Agents,Daemons}}/com.microsoft.*update*.plist /Library/Application\ Support/Microsoft/MAU* ~/Library/Microsoft/*Updater; do echo 'Processing '"${F}"'..'; sudo rm -rf "${F}"; done</string>
